@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#fff8f6">
+  <meta name="description" content="Give blood, give hope. Join LifeDrop and help connect blood donors with people who need them.">
+  <title>LifeDrop — Give blood. Give hope.</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #251d1d;
+      --muted: #766b69;
+      --red: #c92f3c;
+      --red-dark: #a82130;
+      --rose: #fff0ed;
+      --paper: #fffaf8;
+      --line: #f0e5e2;
+      --white: #fff;
+      --shadow: 0 24px 70px rgb(74 31 31 / 10%);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input, select { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    .container { width: min(1120px, calc(100% - 48px)); margin-inline: auto; }
+
+    .site-header {
+      position: sticky;
+      z-index: 10;
+      top: 0;
+      border-bottom: 1px solid rgb(240 229 226 / 75%);
+      background: rgb(255 250 248 / 92%);
+      backdrop-filter: blur(14px);
+    }
+    .nav {
+      display: flex;
+      min-height: 76px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+    }
+    .brand { display: inline-flex; align-items: center; gap: 10px; font-size: 1.2rem; font-weight: 800; letter-spacing: -.04em; }
+    .brand-mark {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border-radius: 13px;
+      color: var(--white);
+      background: var(--red);
+    }
+    .brand-mark svg { width: 22px; height: 22px; }
+    .nav-links { display: flex; align-items: center; gap: 32px; color: var(--muted); font-size: .92rem; font-weight: 600; }
+    .nav-links a:hover { color: var(--red); }
+    .button {
+      display: inline-flex;
+      min-height: 48px;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 0 20px;
+      border: 0;
+      border-radius: 13px;
+      color: var(--white);
+      background: var(--red);
+      box-shadow: 0 8px 20px rgb(201 47 60 / 20%);
+      cursor: pointer;
+      font-weight: 750;
+      transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+    }
+    .button:hover { transform: translateY(-2px); background: var(--red-dark); box-shadow: 0 12px 24px rgb(201 47 60 / 24%); }
+    .button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 3px solid #ed9ba1;
+      outline-offset: 3px;
+    }
+    .button svg { width: 17px; height: 17px; }
+
+    .hero { overflow: hidden; padding: 76px 0 62px; }
+    .hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; gap: 58px; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 18px;
+      color: var(--red);
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .eyebrow-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { max-width: 600px; margin-bottom: 20px; font-size: clamp(3rem, 6.2vw, 5rem); line-height: 1.04; letter-spacing: -.075em; }
+    h1 span { color: var(--red); }
+    .hero-copy { max-width: 510px; margin-bottom: 28px; color: var(--muted); font-size: 1.08rem; }
+    .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+    .text-link { display: inline-flex; align-items: center; gap: 8px; padding: 10px 8px; color: var(--ink); font-weight: 700; }
+    .text-link svg { width: 17px; color: var(--red); transition: transform .2s ease; }
+    .text-link:hover svg { transform: translateX(4px); }
+    .trust-note { display: flex; align-items: center; gap: 10px; margin-top: 30px; color: var(--muted); font-size: .86rem; }
+    .avatar-stack { display: flex; padding-left: 4px; }
+    .avatar-stack span { display: grid; width: 28px; height: 28px; margin-left: -5px; place-items: center; border: 2px solid var(--paper); border-radius: 50%; background: #f6d4cf; font-size: .7rem; }
+    .avatar-stack span:nth-child(2) { background: #f3c4c6; }
+    .avatar-stack span:nth-child(3) { background: #edddd0; }
+    .trust-note strong { color: var(--ink); }
+    .hero-art {
+      position: relative;
+      display: grid;
+      min-height: 425px;
+      place-items: center;
+      border-radius: 38% 38% 25px 25px;
+      background: linear-gradient(145deg, #fce2dd, #f9c9c4);
+    }
+    .hero-art::before, .hero-art::after { position: absolute; border: 1px solid rgb(255 255 255 / 55%); border-radius: 50%; content: ""; }
+    .hero-art::before { width: 300px; height: 300px; }
+    .hero-art::after { width: 390px; height: 390px; }
+    .blood-drop {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      width: 230px;
+      height: 270px;
+      place-items: center;
+      color: var(--white);
+      filter: drop-shadow(0 26px 24px rgb(139 33 43 / 25%));
+    }
+    .blood-drop svg { width: 100%; height: 100%; }
+    .drop-heart { position: absolute; top: 46%; left: 50%; width: 57px; transform: translate(-50%, -50%); }
+    .floating-card {
+      position: absolute;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 17px;
+      border: 1px solid rgb(255 255 255 / 75%);
+      border-radius: 17px;
+      background: rgb(255 255 255 / 88%);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .floating-card.top { top: 54px; right: -18px; }
+    .floating-card.bottom { bottom: 42px; left: -28px; }
+    .card-icon { display: grid; width: 40px; height: 40px; place-items: center; border-radius: 12px; color: var(--red); background: var(--rose); }
+    .card-icon svg { width: 21px; height: 21px; }
+    .floating-card strong, .floating-card small { display: block; }
+    .floating-card strong { font-size: .93rem; }
+    .floating-card small { color: var(--muted); font-size: .76rem; }
+    .availability { width: 9px; height: 9px; border-radius: 50%; background: #41a878; box-shadow: 0 0 0 4px #e2f5eb; }
+
+    .impact { padding: 0 0 76px; }
+    .impact-card { display: grid; grid-template-columns: repeat(3, 1fr); padding: 27px 12px; border: 1px solid var(--line); border-radius: 20px; background: var(--white); box-shadow: 0 12px 38px rgb(74 31 31 / 5%); }
+    .impact-item { padding: 4px 24px; text-align: center; }
+    .impact-item + .impact-item { border-left: 1px solid var(--line); }
+    .impact-item strong { display: block; color: var(--red); font-size: 1.8rem; letter-spacing: -.05em; }
+    .impact-item span { color: var(--muted); font-size: .9rem; }
+
+    .section { padding: 82px 0; }
+    .section-heading { max-width: 610px; margin: 0 auto 42px; text-align: center; }
+    .section-heading .eyebrow { justify-content: center; }
+    h2 { margin-bottom: 12px; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.12; letter-spacing: -.06em; }
+    .section-heading p { margin-bottom: 0; color: var(--muted); }
+    .availability-section { padding: 28px 0 76px; }
+    .availability-panel { padding: 34px; border: 1px solid var(--line); border-radius: 24px; background: var(--white); box-shadow: 0 12px 38px rgb(74 31 31 / 5%); }
+    .availability-form { display: grid; grid-template-columns: 1fr 1fr 1.2fr auto; align-items: end; gap: 14px; }
+    .availability-form .field label { color: var(--ink); }
+    .availability-form .field input, .availability-form .field select { border-color: var(--line); color: var(--ink); background: var(--paper); }
+    .availability-form .field select option { color: var(--ink); background: var(--white); }
+    .availability-form .field input::placeholder { color: var(--muted); }
+    .availability-note { margin: 18px 0 0; color: var(--muted); font-size: .84rem; }
+    .availability-results { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 24px; }
+    .availability-result { padding: 19px; border: 1px solid var(--line); border-radius: 16px; background: var(--paper); }
+    .availability-result h3 { margin-bottom: 4px; font-size: 1rem; }
+    .availability-result p { margin: 0; color: var(--muted); font-size: .85rem; }
+    .availability-result .result-groups { margin-top: 10px; color: var(--red-dark); font-weight: 700; }
+    .availability-status { min-height: 24px; margin: 16px 0 0; color: var(--red-dark); font-size: .9rem; }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .step-card { padding: 27px; border: 1px solid var(--line); border-radius: 20px; background: var(--white); }
+    .step-number { display: grid; width: 48px; height: 48px; margin-bottom: 23px; place-items: center; border-radius: 15px; color: var(--red); background: var(--rose); font-size: 1rem; font-weight: 800; }
+    .step-card h3 { margin-bottom: 8px; font-size: 1.12rem; }
+    .step-card p { margin-bottom: 0; color: var(--muted); font-size: .92rem; }
+
+    .donor-section { padding: 24px 0 88px; }
+    .donor-panel { display: grid; grid-template-columns: .86fr 1.14fr; overflow: hidden; border-radius: 28px; background: #2b2021; box-shadow: var(--shadow); }
+    .donor-message { position: relative; overflow: hidden; padding: 48px; color: var(--white); background: var(--red); }
+    .donor-message::after { position: absolute; right: -65px; bottom: -100px; width: 270px; height: 270px; border: 1px solid rgb(255 255 255 / 19%); border-radius: 50%; box-shadow: 0 0 0 35px rgb(255 255 255 / 7%), 0 0 0 70px rgb(255 255 255 / 5%); content: ""; }
+    .donor-message .eyebrow { color: #ffe2df; }
+    .donor-message h2 { position: relative; z-index: 1; max-width: 360px; margin-bottom: 16px; }
+    .donor-message p { position: relative; z-index: 1; max-width: 370px; margin-bottom: 25px; color: rgb(255 255 255 / 84%); }
+    .eligibility { position: relative; z-index: 1; display: flex; align-items: flex-start; gap: 11px; padding-top: 18px; border-top: 1px solid rgb(255 255 255 / 25%); color: rgb(255 255 255 / 88%); font-size: .83rem; }
+    .eligibility svg { flex: 0 0 18px; width: 18px; margin-top: 2px; }
+    .donor-form-wrap { padding: 46px; color: var(--white); }
+    .donor-form-wrap h3 { margin-bottom: 6px; font-size: 1.4rem; letter-spacing: -.04em; }
+    .form-intro { margin-bottom: 24px; color: #c7babb; font-size: .9rem; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 17px 14px; }
+    .field { display: flex; flex-direction: column; gap: 7px; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { color: #f3ebeb; font-size: .82rem; font-weight: 650; }
+    .field input, .field select {
+      width: 100%;
+      min-height: 48px;
+      padding: 0 13px;
+      border: 1px solid #514648;
+      border-radius: 11px;
+      color: var(--white);
+      background: #382c2e;
+    }
+    .field input::placeholder { color: #a99b9d; }
+    .field select:invalid { color: #a99b9d; }
+    .field select option { color: var(--white); background: #382c2e; }
+    .submit-row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-top: 20px; }
+    .submit-row .button { min-height: 46px; }
+    .privacy-note { max-width: 210px; margin: 0; color: #bcaeb0; font-size: .75rem; line-height: 1.45; }
+    .form-message { min-height: 24px; margin: 14px 0 0; color: #9de0b5; font-size: .88rem; }
+
+    .chip-btn {
+      border: 1px solid var(--line);
+      background: var(--paper);
+      color: var(--ink);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .chip-btn:hover {
+      background: var(--rose);
+      color: var(--red);
+      border-color: #fcdad7;
+      transform: translateY(-1px);
+    }
+    .chip-btn.active {
+      background: var(--red);
+      color: var(--white);
+      border-color: var(--red);
+    }
+
+    .site-footer { padding: 25px 0; border-top: 1px solid var(--line); }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 18px; color: var(--muted); font-size: .83rem; }
+    .footer-inner p { margin: 0; }
+    .footer-note { display: flex; align-items: center; gap: 7px; }
+    .footer-note svg { width: 15px; color: var(--red); }
+
+    @media (max-width: 850px) {
+      .hero { padding-top: 50px; }
+      .hero-grid { grid-template-columns: 1fr .85fr; gap: 28px; }
+      .hero-art { min-height: 360px; }
+      .hero-art::before { width: 250px; height: 250px; }
+      .hero-art::after { width: 320px; height: 320px; }
+      .blood-drop { width: 190px; height: 225px; }
+      .floating-card.top { right: -8px; }
+      .floating-card.bottom { left: -8px; }
+      .donor-panel { grid-template-columns: 1fr; }
+      .donor-message, .donor-form-wrap { padding: 36px; }
+      .availability-form { grid-template-columns: 1fr 1fr; }
+      .availability-results { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      .container { width: min(100% - 32px, 480px); }
+      .nav { min-height: 66px; }
+      .nav-links { display: none; }
+      .nav > .button { min-height: 42px; padding-inline: 14px; font-size: .86rem; }
+      .hero { padding: 48px 0 40px; }
+      .hero-grid { grid-template-columns: 1fr; }
+      h1 { font-size: clamp(3rem, 14vw, 4.4rem); }
+      .hero-copy { font-size: 1rem; }
+      .hero-art { min-height: 340px; margin: 14px 10px 0; }
+      .hero-art::before { width: 230px; height: 230px; }
+      .hero-art::after { width: 290px; height: 290px; }
+      .blood-drop { width: 175px; height: 210px; }
+      .floating-card { padding: 11px 13px; }
+      .floating-card.top { top: 32px; }
+      .floating-card.bottom { bottom: 28px; }
+      .impact { padding-bottom: 45px; }
+      .impact-card { padding: 15px 4px; }
+      .impact-item { padding: 3px 5px; }
+      .impact-item strong { font-size: 1.35rem; }
+      .impact-item span { font-size: .72rem; }
+      .section { padding: 58px 0; }
+      .steps { grid-template-columns: 1fr; gap: 12px; }
+      .step-card { padding: 22px; }
+      .step-number { margin-bottom: 16px; }
+      .availability-section { padding: 12px 0 54px; }
+      .availability-panel { padding: 23px; }
+      .availability-form, .availability-results { grid-template-columns: 1fr; }
+      .donor-section { padding: 0 0 58px; }
+      .donor-panel { border-radius: 22px; }
+      .donor-message, .donor-form-wrap { padding: 29px 23px; }
+      .form-grid { grid-template-columns: 1fr; gap: 14px; }
+      .field.full { grid-column: auto; }
+      .footer-inner { align-items: flex-start; flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav container" aria-label="Main navigation">
+      <a class="brand" href="#home" aria-label="LifeDrop home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 3.2C9.1 7.2 5.5 10.7 5.5 15a6.5 6.5 0 0 0 13 0c0-4.3-3.6-7.8-6.5-11.8Z" fill="currentColor"/><path d="M9.2 15.8c.3 1.3 1.2 2 2.5 2.3" stroke="#C92F3C" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+        LifeDrop
+      </a>
+      <div class="nav-links">
+        <a href="#find-blood">Find blood</a>
+        <a href="#urgent-requests">Urgent requests</a>
+        <a href="#how-it-works">How it works</a>
+        <a href="#impact">Our impact</a>
+        <a href="#donate">Become a donor</a>
+      </div>
+      <a class="button" href="#find-blood">Find blood <span aria-hidden="true">→</span></a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-grid container">
+        <div>
+          <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span> Small act. Lifelong impact.</p>
+          <h1>Give blood.<br><span>Give hope.</span></h1>
+          <p class="hero-copy">A single donation can help save lives. Be the reason someone gets another tomorrow — become a blood donor today.</p>
+          <div class="hero-actions">
+            <a class="button" href="#donate">Join as a donor
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a class="text-link" href="#find-blood">Request blood
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+          <div class="trust-note">
+            <div class="avatar-stack" aria-hidden="true"><span>♥</span><span>♥</span><span>♥</span></div>
+            <span>Join <strong>2,400+ caring donors</strong> in our community</span>
+          </div>
+        </div>
+        <div class="hero-art" aria-label="Illustration of a blood drop representing hope">
+          <div class="blood-drop" aria-hidden="true">
+            <svg viewBox="0 0 230 270" fill="none"><path d="M115 5C87 48 26 111 26 170a89 89 0 0 0 178 0C204 111 143 48 115 5Z" fill="#C92F3C"/><path d="M72 177c4 20 18 32 39 36" stroke="#E77A80" stroke-width="8" stroke-linecap="round"/></svg>
+            <svg class="drop-heart" viewBox="0 0 24 24" fill="none"><path d="M20.8 8.8c0 4.1-8.8 10.2-8.8 10.2S3.2 12.9 3.2 8.8A4.6 4.6 0 0 1 12 6.5a4.6 4.6 0 0 1 8.8 2.3Z" fill="white"/></svg>
+          </div>
+          <div class="floating-card top">
+            <span class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-8-4.5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6.5-8 11-8 11Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></span>
+            <span><strong>Be someone's hero</strong><small>Your donation matters</small></span>
+          </div>
+          <div class="floating-card bottom">
+            <span class="availability" aria-hidden="true"></span>
+            <span><strong>Every 2 seconds</strong><small>Someone needs blood</small></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="impact" id="impact" aria-label="Donation impact">
+      <div class="impact-card container">
+        <div class="impact-item"><strong>1 donation</strong><span>can help save up to 3 lives</span></div>
+        <div class="impact-item"><strong>10 minutes</strong><span>to register your interest</span></div>
+        <div class="impact-item"><strong>100% heart</strong><span>of the change starts with you</span></div>
+      </div>
+    </section>
+
+    <section class="availability-section" id="find-blood">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span> Find blood</p>
+          <h2>Get connected to a blood bank</h2>
+          <p>Search by blood group and location, then contact a licensed center to confirm availability.</p>
+        </div>
+        <div class="availability-panel">
+          <form class="availability-form" id="availability-form">
+            <div class="field">
+              <label for="request-blood-group">Blood group</label>
+              <select id="request-blood-group" name="bloodGroup" required>
+                <option value="" disabled selected>Select group</option>
+                <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+                <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="request-component">Blood component</label>
+              <select id="request-component" name="component" required>
+                <option value="" disabled selected>Select component</option>
+                <option value="Red cells">Red cells</option>
+                <option value="Platelets">Platelets</option>
+                <option value="Plasma">Plasma</option>
+                <option value="Whole blood">Whole blood</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="request-city">City or Area</label>
+              <input id="request-city" name="city" type="text" list="city-list" placeholder="e.g. Hyderabad, Pune, Mumbai, Delhi..." autocomplete="address-level2" required>
+              <datalist id="city-list">
+                <option value="Hyderabad"></option>
+                <option value="Bengaluru"></option>
+                <option value="Mumbai"></option>
+                <option value="Pune"></option>
+                <option value="Delhi"></option>
+                <option value="Chennai"></option>
+                <option value="Kolkata"></option>
+              </datalist>
+            </div>
+            <button class="button" type="submit">Search centers <span aria-hidden="true">→</span></button>
+          </form>
+          
+          <!-- Quick City Selection Chips -->
+          <div class="city-chips" style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 16px;">
+            <span style="font-size: 0.8rem; color: var(--muted); font-weight: 600;">Popular Hubs:</span>
+            <button type="button" class="chip-btn" onclick="selectCity('Hyderabad')">Hyderabad</button>
+            <button type="button" class="chip-btn" onclick="selectCity('Bengaluru')">Bengaluru</button>
+            <button type="button" class="chip-btn" onclick="selectCity('Mumbai')">Mumbai</button>
+            <button type="button" class="chip-btn" onclick="selectCity('Delhi')">Delhi</button>
+            <button type="button" class="chip-btn" onclick="selectCity('Pune')">Pune</button>
+            <button type="button" class="chip-btn" onclick="selectCity('Chennai')">Chennai</button>
+            <button type="button" class="chip-btn" onclick="selectCity('Kolkata')">Kolkata</button>
+            <button type="button" class="chip-btn" onclick="detectUserLocation()" style="background: var(--rose); color: var(--red); border-color: #fcdad7;">📍 Detect My Location</button>
+          </div>
+          <p class="availability-note">Demo only: listings are illustrative, not live inventory. Blood is provided through licensed blood banks and hospitals; confirm availability and any applicable requirements directly with them.</p>
+          <div class="availability-results" id="availability-results" aria-live="polite"></div>
+          <p class="availability-status" id="availability-status" role="status"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="urgent-requests" style="padding: 46px 0 64px; background: #fff5f3;">
+      <div class="container">
+        <div class="section-heading" style="margin-bottom: 28px;">
+          <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span> Immediate Need</p>
+          <h2>Live Emergency Blood Requests</h2>
+          <p>Real-time blood requirements posted by hospitals and patient families. Can you help?</p>
+        </div>
+        <div id="requests-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px;">
+          <p style="color: var(--muted); text-align: center; grid-column: 1/-1;">Loading live blood requests from SQL database...</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="how-it-works">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span> How it works</p>
+          <h2>Making a difference is simple</h2>
+          <p>Your kindness can make a real difference. Getting started only takes a few easy steps.</p>
+        </div>
+        <div class="steps">
+          <article class="step-card">
+            <div class="step-number" aria-hidden="true">01</div>
+            <h3>Sign up</h3>
+            <p>Share a few details so we know how to reach you when someone nearby needs a donor.</p>
+          </article>
+          <article class="step-card">
+            <div class="step-number" aria-hidden="true">02</div>
+            <h3>Get connected</h3>
+            <p>When there is a need, a local blood bank or donation drive can help coordinate next steps.</p>
+          </article>
+          <article class="step-card">
+            <div class="step-number" aria-hidden="true">03</div>
+            <h3>Donate &amp; save lives</h3>
+            <p>Donate at a licensed center after confirming your eligibility with qualified staff.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="donor-section" id="donate">
+      <div class="donor-panel container">
+        <div class="donor-message">
+          <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span> Be the difference</p>
+          <h2>Someone out there needs your kind of help.</h2>
+          <p>Register your interest in donating and take the first step toward giving someone more time.</p>
+          <div class="eligibility">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 4.5 6v5.5c0 4.7 3.2 7.8 7.5 9.5 4.3-1.7 7.5-4.8 7.5-9.5V6L12 3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Eligibility depends on your health and local guidelines. A medical professional will confirm whether you can donate.</span>
+          </div>
+        </div>
+        <div class="donor-form-wrap">
+          <h3>Join the donor community</h3>
+          <p class="form-intro">Add your details to register your interest.</p>
+          <form id="donor-form">
+            <div class="form-grid">
+              <div class="field">
+                <label for="donor-name">Full name</label>
+                <input id="donor-name" name="name" type="text" placeholder="Your name" autocomplete="name" required>
+              </div>
+              <div class="field">
+                <label for="donor-phone">Phone number</label>
+                <input id="donor-phone" name="phone" type="tel" placeholder="+91 98765 43210" autocomplete="tel" required>
+              </div>
+              <div class="field">
+                <label for="blood-group">Blood group</label>
+                <select id="blood-group" name="bloodGroup" required>
+                  <option value="" disabled selected>Select group</option>
+                  <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+                  <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
+                  <option>Not sure</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="donor-city">City or Area</label>
+                <input id="donor-city" name="city" type="text" list="city-list" placeholder="Your city (e.g. Hyderabad, Pune)" autocomplete="address-level2" required>
+              </div>
+            </div>
+            <div class="submit-row">
+              <button class="button" type="submit">Register my interest <span aria-hidden="true">→</span></button>
+              <p class="privacy-note">Your details stay on this page; this demo does not send or store your information.</p>
+            </div>
+            <p class="form-message" id="form-message" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner container">
+      <a class="brand" href="#home"><span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 3.2C9.1 7.2 5.5 10.7 5.5 15a6.5 6.5 0 0 0 13 0c0-4.3-3.6-7.8-6.5-11.8Z" fill="currentColor"/></svg>
+      </span>LifeDrop</a>
+      <p class="footer-note"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.8 8.8c0 4.1-8.8 10.2-8.8 10.2S3.2 12.9 3.2 8.8A4.6 4.6 0 0 1 12 6.5a4.6 4.6 0 0 1 8.8 2.3Z" stroke="currentColor" stroke-width="1.8"/></svg> Made with care. Every donor makes a difference.</p>
+      <p>© <span id="year"></span> LifeDrop</p>
+    </div>
+  </footer>
+
+  <script>
+    // Robust API host detection (works on http://localhost:5000, Live Server 5500, or file://)
+    const API_BASE = (window.location.origin && window.location.origin.includes(':5000'))
+      ? window.location.origin 
+      : 'http://localhost:5000';
+
+    const donorForm = document.querySelector("#donor-form");
+    const formMessage = document.querySelector("#form-message");
+    const availabilityForm = document.querySelector("#availability-form");
+    const availabilityResults = document.querySelector("#availability-results");
+    const availabilityStatus = document.querySelector("#availability-status");
+    const requestsGrid = document.querySelector("#requests-grid");
+
+    // 1. Fetch live statistics from SQL database
+    async function fetchStats() {
+      try {
+        const res = await fetch(`${API_BASE}/api/stats`);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.success && data.stats) {
+          const s = data.stats;
+          const trustSpan = document.querySelector(".trust-note strong");
+          if (trustSpan && s.activeDonors) {
+            trustSpan.textContent = `${s.activeDonors}+ registered donors`;
+          }
+        }
+      } catch (e) {
+        console.warn('Backend not running yet, using demo defaults');
+      }
+    }
+
+    // 2. Fetch live emergency blood requests
+    async function fetchRequests() {
+      if (!requestsGrid) return;
+      try {
+        const res = await fetch(`${API_BASE}/api/requests`);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.success && data.requests && data.requests.length > 0) {
+          requestsGrid.replaceChildren();
+          for (const req of data.requests) {
+            const card = document.createElement("article");
+            card.style.cssText = "padding: 20px; border-radius: 18px; background: white; border: 1px solid var(--line); box-shadow: 0 4px 15px rgb(0 0 0 / 3%); display: flex; flex-direction: column; justify-content: space-between;";
+            
+            const isCritical = req.urgency === 'Critical';
+            const urgencyBg = isCritical ? '#fee2e2' : (req.urgency === 'High' ? '#fef3c7' : '#f3f4f6');
+            const urgencyColor = isCritical ? '#991b1b' : (req.urgency === 'High' ? '#92400e' : '#374151');
+
+            card.innerHTML = `
+              <div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                  <span style="background: var(--rose); color: var(--red); font-weight: 800; font-size: 1.15rem; padding: 3px 10px; border-radius: 8px;">${escapeHtml(req.blood_group)}</span>
+                  <span style="background: ${urgencyBg}; color: ${urgencyColor}; font-weight: 700; font-size: 0.75rem; padding: 3px 8px; border-radius: 6px; text-transform: uppercase;">${escapeHtml(req.urgency)} urgency</span>
+                </div>
+                <h3 style="margin: 0 0 4px; font-size: 1.05rem;">Patient: ${escapeHtml(req.patient_name)}</h3>
+                <p style="margin: 0 0 4px; color: var(--ink); font-size: 0.88rem;">🏥 ${escapeHtml(req.hospital_name)}, ${escapeHtml(req.city)}</p>
+                <p style="margin: 0 0 12px; color: var(--muted); font-size: 0.84rem;">Required: <strong>${req.units_needed} units</strong> of ${escapeHtml(req.component)}</p>
+              </div>
+              <div style="padding-top: 12px; border-top: 1px dashed var(--line); display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 0.82rem; color: var(--muted);">Contact: ${escapeHtml(req.contact_name)}</span>
+                <a href="tel:${escapeHtml(req.contact_phone)}" class="button" style="min-height: 34px; padding: 0 14px; font-size: 0.82rem; border-radius: 8px; text-decoration: none;">Call Now</a>
+              </div>
+            `;
+            requestsGrid.append(card);
+          }
+        } else {
+          requestsGrid.innerHTML = '<p style="color: var(--muted); text-align: center; grid-column: 1/-1;">No urgent emergency requests pending currently.</p>';
+        }
+      } catch (err) {
+        requestsGrid.innerHTML = '<p style="color: var(--muted); text-align: center; grid-column: 1/-1;">Start backend with "node server.js" to load live patient requests.</p>';
+      }
+    }
+
+    // 3. Register voluntary donor
+    donorForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!donorForm.reportValidity()) return;
+
+      const formData = new FormData(donorForm);
+      const payload = {
+        name: formData.get("name").toString().trim(),
+        phone: formData.get("phone").toString().trim(),
+        bloodGroup: formData.get("bloodGroup"),
+        city: formData.get("city").toString().trim()
+      };
+
+      if (!payload.bloodGroup || payload.bloodGroup === "Not sure") {
+        formMessage.style.color = "#ffb3b8";
+        formMessage.textContent = "Please select a specific blood group to register in the donor database.";
+        return;
+      }
+
+      formMessage.style.color = "#9de0b5";
+      formMessage.textContent = "Registering donor into database...";
+
+      try {
+        const response = await fetch(`${API_BASE}/api/donors`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+
+        if (result.success) {
+          formMessage.style.color = "#9de0b5";
+          formMessage.textContent = `✓ Success! Thank you ${payload.name}. You are registered in the SQL database (Donor ID: #${result.donorId}).`;
+          donorForm.reset();
+          fetchStats();
+        } else {
+          formMessage.style.color = "#ffb3b8";
+          formMessage.textContent = result.error || 'Failed to register. Please check your details.';
+        }
+      } catch (err) {
+        formMessage.style.color = "#ffd166";
+        formMessage.textContent = `Backend server offline. Start server with "node server.js" to save to SQL database.`;
+      }
+    });
+
+    // 4. Blood Availability Search
+    availabilityForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!availabilityForm.reportValidity()) return;
+
+      const formData = new FormData(availabilityForm);
+      const bloodGroup = formData.get("bloodGroup");
+      const component = formData.get("component");
+      const city = formData.get("city").toString().trim();
+
+      availabilityStatus.textContent = "Searching blood centers and donors in SQL database...";
+      availabilityResults.replaceChildren();
+
+      try {
+        const url = `${API_BASE}/api/search?bloodGroup=${encodeURIComponent(bloodGroup)}&component=${encodeURIComponent(component)}&city=${encodeURIComponent(city)}&includeCompatible=true`;
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (!data.success) {
+          availabilityStatus.textContent = data.error || 'No search results found.';
+          return;
+        }
+
+        const { centers, donors, nearbyCenters, isFallback } = data;
+
+        if ((!centers || centers.length === 0) && (!donors || donors.length === 0) && (!nearbyCenters || nearbyCenters.length === 0)) {
+          availabilityStatus.textContent = `No blood centers or donors found in "${city}" for ${bloodGroup} (${component}). Try selecting one of the popular hubs like Hyderabad, Bengaluru, Pune, Mumbai, or Delhi.`;
+          return;
+        }
+
+        availabilityResults.replaceChildren();
+
+        // 1. If fallback was used (nearby regional centers)
+        if (isFallback && nearbyCenters && nearbyCenters.length > 0) {
+          const alertBanner = document.createElement("div");
+          alertBanner.style.cssText = "grid-column: 1/-1; padding: 12px 16px; border-radius: 12px; background: #fff3cd; border: 1px solid #ffeeba; color: #856404; font-size: 0.88rem; font-weight: 600;";
+          alertBanner.innerHTML = `📍 No blood bank directly inside <strong>${escapeHtml(city)}</strong> has available stock right now. Showing <strong>${nearbyCenters.length} verified regional centers</strong> with available stock:`;
+          availabilityResults.append(alertBanner);
+
+          for (const center of nearbyCenters) {
+            const card = document.createElement("article");
+            card.className = "availability-result";
+            card.innerHTML = `
+              <div style="display: flex; justify-content: space-between; align-items: start; gap: 8px;">
+                <h3 style="margin: 0; font-size: 1.05rem;">${escapeHtml(center.center_name)}</h3>
+                <span style="background: #fff3e0; color: #e65100; font-size: 0.72rem; padding: 2px 7px; border-radius: 6px; font-weight: 700; white-space: nowrap;">Nearby Region</span>
+              </div>
+              <p style="margin: 4px 0 2px; color: var(--ink); font-size: 0.88rem;">📍 ${escapeHtml(center.address)}, ${escapeHtml(center.city)} (${escapeHtml(center.state || '')})</p>
+              <p style="margin: 2px 0 6px; color: var(--muted); font-size: 0.82rem;">📞 <a href="tel:${escapeHtml(center.phone)}" style="color: var(--red); font-weight: 600;">${escapeHtml(center.phone)}</a> · ⏰ ${escapeHtml(center.operating_hours || '24/7')}</p>
+              <div class="result-groups" style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--line); display: flex; justify-content: space-between; align-items: center;">
+                <span>${escapeHtml(center.blood_group)} · ${escapeHtml(center.component)}</span>
+                <strong style="color: #2e7d32; background: #e8f5e9; padding: 3px 8px; border-radius: 6px; font-size: 0.82rem;">${center.units_available} units in stock</strong>
+              </div>
+            `;
+            availabilityResults.append(card);
+          }
+        }
+
+        // 2. Render exact/cluster blood centers
+        if (centers && centers.length > 0) {
+          for (const center of centers) {
+            const card = document.createElement("article");
+            card.className = "availability-result";
+            card.innerHTML = `
+              <div style="display: flex; justify-content: space-between; align-items: start; gap: 8px;">
+                <h3 style="margin: 0; font-size: 1.05rem;">${escapeHtml(center.center_name)}</h3>
+                <span style="background: #e1f5fe; color: #0277bd; font-size: 0.72rem; padding: 2px 7px; border-radius: 6px; font-weight: 700; white-space: nowrap;">Blood Bank</span>
+              </div>
+              <p style="margin: 4px 0 2px; color: var(--ink); font-size: 0.88rem;">📍 ${escapeHtml(center.address)}, ${escapeHtml(center.city)}</p>
+              <p style="margin: 2px 0 6px; color: var(--muted); font-size: 0.82rem;">📞 <a href="tel:${escapeHtml(center.phone)}" style="color: var(--red); font-weight: 600;">${escapeHtml(center.phone)}</a> · ⏰ ${escapeHtml(center.operating_hours || '24/7')}</p>
+              <div class="result-groups" style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--line); display: flex; justify-content: space-between; align-items: center;">
+                <span>${escapeHtml(center.blood_group)} · ${escapeHtml(center.component)}</span>
+                <strong style="color: #2e7d32; background: #e8f5e9; padding: 3px 8px; border-radius: 6px; font-size: 0.82rem;">${center.units_available} units available</strong>
+              </div>
+            `;
+            availabilityResults.append(card);
+          }
+        }
+
+        // 3. Render matching voluntary donors
+        if (donors && donors.length > 0) {
+          for (const donor of donors) {
+            const card = document.createElement("article");
+            card.className = "availability-result";
+            card.style.background = "#fff8f6";
+            card.style.borderColor = "#fcdad7";
+            card.innerHTML = `
+              <div style="display: flex; justify-content: space-between; align-items: start; gap: 8px;">
+                <h3 style="margin: 0; font-size: 1.05rem;">${escapeHtml(donor.name)}</h3>
+                <span style="background: #fce4ec; color: #c2185b; font-size: 0.72rem; padding: 2px 7px; border-radius: 6px; font-weight: 700; white-space: nowrap;">Volunteer Donor</span>
+              </div>
+              <p style="margin: 4px 0 2px; color: var(--ink); font-size: 0.88rem;">📍 ${escapeHtml(donor.city)} ${donor.address ? '(' + escapeHtml(donor.address) + ')' : ''}</p>
+              <p style="margin: 2px 0 6px; color: var(--muted); font-size: 0.82rem;">📞 <a href="tel:${escapeHtml(donor.phone)}" style="color: var(--red); font-weight: 600;">${escapeHtml(donor.phone)}</a></p>
+              <div class="result-groups" style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed #fcdad7; display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: var(--red); font-weight: 800;">Blood Group: ${escapeHtml(donor.blood_group)}</span>
+                <span style="color: #2e7d32; font-weight: 600; font-size: 0.8rem;">● Ready to Donate</span>
+              </div>
+            `;
+            availabilityResults.append(card);
+          }
+        }
+
+        const totalFound = (centers ? centers.length : 0) + (donors ? donors.length : 0) + (nearbyCenters ? nearbyCenters.length : 0);
+        availabilityStatus.innerHTML = `Found <strong>${totalFound} matches</strong> in/near <em>${escapeHtml(city)}</em>.`;
+
+      } catch (err) {
+        console.warn('API error:', err);
+        availabilityStatus.textContent = "Could not reach backend API. Ensure server is started with 'node server.js'.";
+      }
+    });
+
+    // Helper: Render blood centers list in results panel
+    function renderCentersList(centers, statusMsg) {
+      if (!availabilityResults) return;
+      availabilityResults.replaceChildren();
+
+      if (!centers || centers.length === 0) {
+        availabilityStatus.textContent = "No blood centers found for this selection.";
+        return;
+      }
+
+      for (const center of centers) {
+        const card = document.createElement("article");
+        card.className = "availability-result";
+        card.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: start; gap: 8px;">
+            <h3 style="margin: 0; font-size: 1.05rem;">${escapeHtml(center.name || center.center_name)}</h3>
+            <span style="background: #e1f5fe; color: #0277bd; font-size: 0.72rem; padding: 2px 7px; border-radius: 6px; font-weight: 700; white-space: nowrap;">Blood Bank</span>
+          </div>
+          <p style="margin: 4px 0 2px; color: var(--ink); font-size: 0.88rem;">📍 ${escapeHtml(center.address)}, ${escapeHtml(center.city)} (${escapeHtml(center.state || '')})</p>
+          <p style="margin: 2px 0 6px; color: var(--muted); font-size: 0.82rem;">📞 <a href="tel:${escapeHtml(center.phone)}" style="color: var(--red); font-weight: 600;">${escapeHtml(center.phone)}</a> · ⏰ ${escapeHtml(center.operating_hours || '24/7')}</p>
+          <div class="result-groups" style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--line); display: flex; justify-content: space-between; align-items: center;">
+            <span style="color: var(--muted); font-size: 0.82rem;">Emergency Blood Bank</span>
+            <span style="color: #2e7d32; font-weight: 700; font-size: 0.82rem;">● Active &amp; Verified</span>
+          </div>
+        `;
+        availabilityResults.append(card);
+      }
+
+      if (statusMsg) {
+        availabilityStatus.innerHTML = statusMsg;
+      }
+    }
+
+    // Helper: Load featured centers on initial page load so section is never blank!
+    async function loadInitialCenters() {
+      try {
+        const res = await fetch(`${API_BASE}/api/centers`);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.success && data.centers && data.centers.length > 0) {
+          renderCentersList(
+            data.centers.slice(0, 6),
+            `Showing <strong>${Math.min(6, data.centers.length)} verified blood banks</strong>. Select your blood group and city above to check real-time stock.`
+          );
+        }
+      } catch (e) {
+        console.warn("Could not load initial centers:", e);
+      }
+    }
+
+    // Helper: Load centers for a specific city
+    async function loadCentersForCity(cityName) {
+      availabilityStatus.textContent = `Loading blood centers in ${cityName}...`;
+      try {
+        const res = await fetch(`${API_BASE}/api/centers?city=${encodeURIComponent(cityName)}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.success && data.centers && data.centers.length > 0) {
+          renderCentersList(
+            data.centers,
+            `Found <strong>${data.centers.length} verified blood banks</strong> in <em>${escapeHtml(cityName)}</em>. Select a blood group above to check specific component inventory.`
+          );
+        } else {
+          availabilityStatus.innerHTML = `No registered centers found directly in "${escapeHtml(cityName)}". Use the search form above with blood group to view regional stock.`;
+        }
+      } catch (e) {
+        availabilityStatus.textContent = "Could not fetch centers for this city.";
+      }
+    }
+
+    // Helper: City quick selection from chips
+    window.selectCity = function(cityName) {
+      const cityInput = document.querySelector("#request-city");
+      if (cityInput) {
+        cityInput.value = cityName;
+        cityInput.focus();
+      }
+      document.querySelectorAll(".chip-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.textContent.trim() === cityName);
+      });
+
+      const bgSelect = document.querySelector("#request-blood-group");
+      const compSelect = document.querySelector("#request-component");
+      if (bgSelect && bgSelect.value && compSelect && compSelect.value) {
+        availabilityForm.requestSubmit();
+      } else {
+        loadCentersForCity(cityName);
+      }
+    };
+
+    // Helper: Detect User Location via Browser Geolocation API
+    window.detectUserLocation = function() {
+      const cityInput = document.querySelector("#request-city");
+      if (!cityInput) return;
+      if (!navigator.geolocation) {
+        alert("Geolocation is not supported by your browser.");
+        return;
+      }
+
+      cityInput.placeholder = "Detecting location...";
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          try {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
+            if (res.ok) {
+              const geoData = await res.json();
+              const detectedCity = geoData.address.city || geoData.address.town || geoData.address.state_district || geoData.address.state || "Hyderabad";
+              cityInput.value = detectedCity;
+              selectCity(detectedCity);
+            } else {
+              cityInput.value = "Hyderabad";
+              selectCity("Hyderabad");
+            }
+          } catch (e) {
+            cityInput.value = "Hyderabad";
+            selectCity("Hyderabad");
+          }
+        },
+        (err) => {
+          console.warn("Location permission denied or unavailable:", err.message);
+          cityInput.placeholder = "Enter your city";
+          alert("Location access denied. Please click on any of the popular city buttons or type your city.");
+        },
+        { timeout: 7000 }
+      );
+    };
+
+    // Load available locations from backend to populate datalist
+    async function loadCityOptions() {
+      try {
+        const res = await fetch(`${API_BASE}/api/search/locations`);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.success && data.locations) {
+          const datalist = document.querySelector("#city-list");
+          if (datalist) {
+            datalist.replaceChildren();
+            for (const loc of data.locations) {
+              const opt = document.createElement("option");
+              opt.value = loc.city;
+              opt.textContent = `${loc.city} (${loc.state || ''})`;
+              datalist.appendChild(opt);
+            }
+          }
+        }
+      } catch (e) {
+        // Silent fallback
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>"']/g, (m) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      })[m]);
+    }
+
+    // Initialize all components on page load
+    loadInitialCenters();
+    loadCityOptions();
+    fetchStats();
+    fetchRequests();
+    document.querySelector("#year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
